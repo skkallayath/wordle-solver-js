@@ -1,6 +1,6 @@
 # Wordle Solver (JavaScript)
 
-A tool to help you win the wordle game. This tool provides a best guess word and a set of candidate words for each step . You are still the player and its your call to choose which word you want to enter.
+A tool to help you win the wordle game. This tool provides a best guess word and a set of candidate words for each step. Can be used in both hard mode and non-hard modes. You can always choose which word you want to enter.
 
 ### Setup
 
