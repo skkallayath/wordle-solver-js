@@ -1,0 +1,27 @@
+{
+  "name": "wordle-solver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skkallayath/wordle-solver-js.git"
+  },
+  "keywords": [
+    "wordle",
+    "solver",
+    "js"
+  ],
+  "author": "Sharafudheen KK",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/skkallayath/wordle-solver-js/issues"
+  },
+  "homepage": "https://github.com/skkallayath/wordle-solver-js#readme",
+  "dependencies": {
+    "inquirer": "^8.2.0"
+  }
+}
