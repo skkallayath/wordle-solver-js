@@ -66,7 +66,7 @@ module.exports = function Wordle () {
       const letters = option[0]
       const mode = option[1]
 
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < this.length; i++) {
         if (mode[i] === '+') {
           matching = replaceCharAt(matching, i, letters[i])
           atLeastOneMatching = true
@@ -86,20 +86,23 @@ module.exports = function Wordle () {
       }
     }
 
-    if (allExistingLetters.length) {
-      const set = [...new Set(allExistingLetters)]
-      regexes.push(new RegExp(set.map(l => `(.*[${set.join('')}].*)`).join('')))
-    }
-
     if (atLeastOneMatching) {
       regexes.push(new RegExp(matching))
     }
 
     if (notExistingLetters.length) {
-      regexes.push(new RegExp(`[^${notExistingLetters.join('')}]{5}`))
+      regexes.push(
+        new RegExp(`[^${notExistingLetters.join('')}]{${this.length}}`)
+      )
     }
-    let missplacedRegex = new Array(5).fill('.')
-    for (let i = 0; i < 5; i++) {
+
+    if (allExistingLetters.length) {
+      const set = [...new Set(allExistingLetters)]
+      set.forEach(letter => regexes.push(new RegExp(`(.*[${letter}].*)`)))
+    }
+
+    let missplacedRegex = new Array(this.length).fill('.')
+    for (let i = 0; i < this.length; i++) {
       if (this.missplacedLetters[i].length) {
         missplacedRegex[i] = `[^${[...new Set(this.missplacedLetters[i])].join(
           ''
@@ -109,6 +112,8 @@ module.exports = function Wordle () {
     if (atLeastOneMatching) {
       regexes.push(new RegExp(missplacedRegex.join('')))
     }
+
+    console.log(regexes, 'regexes')
 
     this.matchingWords = words.filter(
       word => !regexes.find(reg => !reg.test(word))
