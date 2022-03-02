@@ -1,7 +1,8 @@
 const words = require('./wordle-words')
 const { removeIfExists, replaceCharAt } = require('./utils')
 
-module.exports = function Wordle () {
+module.exports = function Wordle (hardMode = false) {
+  this.hardMode = hardMode
   this.length = 5
   this.options = []
   this.matchingWords = words
@@ -113,8 +114,6 @@ module.exports = function Wordle () {
       regexes.push(new RegExp(missplacedRegex.join('')))
     }
 
-    console.log(regexes, 'regexes')
-
     this.matchingWords = words.filter(
       word => !regexes.find(reg => !reg.test(word))
     )
@@ -127,6 +126,13 @@ module.exports = function Wordle () {
   }
 
   this.findBestGuess = () => {
+    if (this.matchingWords.length === 0) {
+      return
+    }
+    if (this.matchingWords.length === 1) {
+      console.log('Next best guess is', this.matchingWords[0])
+      return
+    }
     const letterWeights = {}
     for (const word of this.matchingWords) {
       for (i = 0; i < word.length; i++) {
@@ -138,14 +144,18 @@ module.exports = function Wordle () {
     }
     let maxWeightWord = undefined
     let maxWeight = 0
-    for (const word of this.matchingWords) {
+    const wordCandidates = this.hardMode ? this.matchingWords : words
+    for (const word of wordCandidates) {
       let weight = 0
       const existingLetters = {}
       for (i = 0; i < word.length; i++) {
         const letter = word[i]
         if (
           !existingLetters[letter] &&
-          !this.missplacedLetters[i].includes(letter)
+          !(
+            this.missplacedLetters[i] &&
+            this.missplacedLetters[i].includes(letter)
+          )
         ) {
           weight = weight + (letterWeights[letter] || 0)
         }

@@ -1,9 +1,16 @@
 const Wordle = require('./src/wordle')
 const inquirer = require('inquirer')
 
-const wordle = new Wordle()
-
 const prompt = async () => {
+  const hardModeInputs = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'hardMode',
+      message: 'Are you playing in hard mode',
+      default: false
+    }
+  ])
+  const wordle = new Wordle(hardModeInputs.hardMode)
   let proceed = true
   let word = undefined
   let option = undefined
@@ -30,13 +37,17 @@ const prompt = async () => {
       wordle.validateOption(inputs.option)
       word = inputs.word
       option = inputs.option
+      if (option === '+++++') {
+        console.log('Congratulations. You done it')
+        proceed = false
+        break
+      }
       wordle.addOption(word, option)
     } catch (e) {
       console.error(e.message)
     }
     word = undefined
     option = undefined
-
     const checkBoxInputs = await inquirer.prompt([
       {
         type: 'confirm',
@@ -51,4 +62,4 @@ const prompt = async () => {
   }
 }
 
-prompt().then(done => console.log('Done'))
+prompt()
